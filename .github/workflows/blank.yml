@@ -26,5 +26,4 @@ jobs:
     - name: Run a one-line script
       run: make
 
-    # Runs a set of commands using the runners shell
 
