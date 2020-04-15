@@ -1,8 +1,8 @@
-#incluce<iostream>
+#include<iostream>
 using namespace std;
 
 int main()
 {
-  std::cout<<"hello\n";
+  cout<<"hello\n";
   return 0;
 }
