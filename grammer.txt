@@ -1,0 +1,76 @@
+{int n = 1}
+
+String -> "{StringBody.i = ''} StringBody " {String.s = StringBody.s}
+StringBody -> char {StringBody1.i = StringBody1.i + char.lex} StringBody {StringBody.s = StringBody1.s}
+StringBody -> num {StringBody1.i = StringBody1.i + num.lex} StringBody {StringBody.s = StringBody1.s}
+StringBody -> . {StringBody.s = StringBody.i}	
+
+
+Type -> int 
+Type -> char 
+
+TYPE -> id 	{TYPE.s = id.lex}
+TYPE -> num	{TYPE.s = num.lex}
+
+Expression -> TYPE {Expression'.i = TYPE.s} Expression' {Expression.s = Expression'.s}
+Expression' -> . {Expression'.s = Expression'.i}
+Expression' -> ArthimaticOP TYPE {Expression'.s = Expression'.i + ArthimaticOP + TYPE.s}
+
+
+RelationalOP -> = | ~ = | < | > | <= | >= 
+ArthimaticOP -> + | - | / | * | % 
+
+S -> Comment S 
+S -> Function S
+
+Function -> func Type id : Code .
+
+Code -> begin CodeBody end 
+Code -> Comment Code 
+CodeBody -> If CodeBody 
+CodeBody -> For CodeBody 
+CodeBody -> Print CodeBody 
+CodeBody -> Comment CodeBody 
+CodeBody -> ASSN CodeBody 
+CodeBody -> In CodeBody 
+CodeBody -> Return CodeBody 
+CodyBody -> .
+
+COND -> Expression RelationalOP Expression {
+		COND.t = n;
+    emit('if', Expression.s, RelationalOP.s, Expression.s, 'goto');
+    COND.f = n;
+    emit('goto');
+}
+
+If -> if COND {backpatch(COND.t, n)} 
+			: Code {pos = n; emit('goto'); backpatch(COND.f, n)}
+      If' {backpatch(pos, If'.s); If.s = If'.s}
+If' -> elif COND {backpatch(COND.t, n)}
+			: Code {pos = n; emit('goto'); backpatch(COND.f, n)}
+      If' {backpatch(pos, If'1.s); If'.s = If'1.s; }
+If' -> else : Code { If'.s = n }
+If' -> . { If'.s = n }
+
+Print -> print PrintBody {emit('out', PrintBody.s, ';')}
+PrintBody -> Expression {PrintBody.s = Expression.s}
+PrintBody -> String {PrintBody.s = String.s}
+
+In -> in id ; {emit('in', id.lex, ';')}
+
+Return -> return ReturnBody {emit('ret', ReturnBody.s, ';')}
+ReturnBody -> Expression {ReturnBody.s = Expression.s}
+ReturnBody -> String {ReturnBody.s = String.s}
+
+ASSN -> id {ASSN'.i = id.lex} ASSN1
+ASSN1 -> Type ; {}
+ASSN1 -> <- Expression ASSN2 ; {emit(ASSN'.i, '=', Expression.s, ';')}
+ASSN2 -> Type
+ASSN2 -> .
+
+
+ForAssignment -> id <- Expression ; {ForAssignment.s = id.lex + '=' + Expression.s + ';'}
+
+For -> for ForAssignment, {For.start = n}
+        COND  {backpatch(COND.t, n)}
+        , ForAssignment : Code {emit('goto', For.start); backpatch(COND.f, n);}

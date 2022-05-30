@@ -1,0 +1,5 @@
+i ,INT,0
+num,INT,4
+x,INT,8
+y,INT,12
+z,INT,16

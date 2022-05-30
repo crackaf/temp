@@ -1,0 +1,72 @@
+S -> Function S .
+S -> Comment S .
+
+Expression -> T E` .
+E` -> + T E` .
+E` -> - T E` .
+E` -> .
+T -> F T` .
+T` -> * F T` .
+T` -> / F T` .
+T` -> % F T .
+T` -> .
+F -> id .
+F -> num .
+
+Print -> print PrintBody .
+PrintBody -> Expression .
+PrintBody -> String .
+
+Comment -> \# StringBody \n .
+
+String -> " StringBody " .
+StringBody -> char StringBody .
+StringBody -> num StringBody .
+StringBody -> .
+
+Assignment -> id Assignment2 .
+Assignment2 -> , Assignment | <- Assignment3 | Type ; .
+Assignment3 -> Expression Assignment4 .
+Assignment4 -> , Assignment | Type ; .
+
+Type -> int .
+Type -> char .
+
+In -> in id ; .
+
+Eof -> \n .
+
+Return -> return ReturnBody .
+ReturnBody -> Expression .
+ReturnBody -> String .
+ReturnBody -> .
+
+Function -> func Type id : Code .
+
+Code -> begin CodeBody | Comment Code .
+CodeBody -> If CodeBody CodeBodyEnd .
+CodeBody -> For CodeBody CodeBodyEnd .
+CodeBody -> Print CodeBody CodeBodyEnd .
+CodeBody -> Comment CodeBody CodeBodyEnd .
+CodeBody -> Assignment CodeBody CodeBodyEnd .
+CodeBody -> In CodeBody CodeBodyEnd .
+CodeBody -> Return CodeBody CodeBodyEnd .
+CodeBodyEnd -> end .
+
+If -> if ConditionalStatement : Code If' .
+If' -> elif ConditionalStatement : Code If' .
+If' -> else : Code .
+If' -> .
+
+ConditionalStatement -> Expression RelationalOP Expression .
+
+For -> for Assignment, ConditionalStatement, Assignment : Code .
+
+ArthimaticOP -> + .
+ArthimaticOP -> - .
+ArthimaticOP -> / .
+ArthimaticOP -> * .
+ArthimaticOP -> % .
+
+RelationalOP -> = | ~ = | < RelationalOP' | > RelationalOP' .
+RelationalOP' -> = | .

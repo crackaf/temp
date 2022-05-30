@@ -1,0 +1,25 @@
+x = 0;
+y = 1;
+z = 0;
+i  = int;
+num = int;
+out "Enter the number :";
+in num;
+if num < 0 goto 9
+goto 12
+out "negative number entered\n";
+ret 0;
+goto 12
+out "\nThe fibonacci series :";
+i = 0;
+if i < num goto 16
+goto 23
+out x;
+out " ";
+z = x+y;
+x = y;
+y = z;
+i = i+1;
+goto 14
+out "\n";
+ret 0;

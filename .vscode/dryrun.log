@@ -1,0 +1,9 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/media/crackaf/44edb061-17db-4bf8-89a9-ad14bbb373b5/spring2022/compiler/a6'
+g++ -c -g lexer.cpp
+g++ -c -g main.cpp
+g++ -c -g parser.cpp
+g++ -c -g translation.cpp
+g++ lexer.o main.o parser.o translation.o -o a.out -lm
+make: Leaving directory '/media/crackaf/44edb061-17db-4bf8-89a9-ad14bbb373b5/spring2022/compiler/a6'
+ 
